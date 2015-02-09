@@ -1,0 +1,49 @@
+.caixa-container{
+    position: relative;
+    top: 80px;
+    margin:  0px;
+    padding: 0px;
+    z-index: 0;
+}
+.salas{
+    display: block;
+    margin: auto;
+    padding: 0px;
+    text-align: center;
+}
+.salas li{
+    display: inline-block;
+    margin: 1%;
+    font-size: 30px;
+    color: white;
+    position: relative;
+    background-color: yellowgreen;
+    width: 30%;
+    min-width: 200px;
+    padding: 20px;
+    text-align: center;
+}
+.salas li a{
+    color: white;
+}
+.salas,.salas li{
+    position: relative;
+    list-style: none;
+}
+.rodape{
+    position: fixed;
+    display: block;
+    float: bottom;
+    background-color: #000;
+    bottom: 0px;
+    height: 50px;
+    width: 100%;
+    
+}
+.botao-cancelar{
+    position: relative;
+    float: right;
+    margin-right: 5%;
+    top: 8px;
+}
+

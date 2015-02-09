@@ -1,0 +1,23 @@
+/* 
+    Created on : 08/02/2015, 21:17:30
+    Author     : Emanuel Batista da Silva Filho <emanuelbatista2011@gmail.com>
+*/
+
+.container-page{
+    position: relative;
+    display: block;
+    top: 80px;
+}
+.tabela{
+    margin: 0px 10%;
+}
+.campos{
+     margin: 0px 10%;
+     text-align: center;
+}
+.campos label{
+    margin-left: 5px;
+}
+.campos div,.campos>input[type="submit"]{
+    margin-top: 5px;
+}

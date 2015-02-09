@@ -1,0 +1,32 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 04/02/2015, 16:42:32
+    Author     : Emanuel Batista da Silva Filho <emanuelbatista2011@gmail.com>
+*/
+body{
+ background-color: whitesmoke;
+ 
+}
+h3{
+    text-align: center;
+    margin-bottom: 30px;
+}
+.formulario{
+    border-radius: 5px;
+    padding: 2%;
+    display: block;
+    margin: 30px 30%;
+}
+.submit{
+    text-align: center;
+}
+
+@media screen and (max-width: 750px){
+    .formulario{
+        margin: 30px 10%;
+    }
+}
