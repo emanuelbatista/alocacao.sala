@@ -44,13 +44,33 @@ public class GerenciarEvento {
     public List<Sala> listarSalasDisponiveisEvento(Evento... eventos) throws PersistenciaException {
         return getEventoDao().listarSalasDisponiveisEvento(eventos);
     }
-    
-    public void alocar(Integer id_sala,Evento... evento) throws PersistenciaException{
+
+    public void alocar(Integer id_sala, Evento... evento) throws PersistenciaException {
         getEventoDao().alocar(id_sala, evento);
     }
-    
-    public List<Evento> buscarEvento(String nome, String descricao,Timestamp data,
-            String responsavel,String status) throws PersistenciaException{
+
+    public List<Evento> buscarEvento(String nome, String descricao, Timestamp data,
+            String responsavel, String... status) throws PersistenciaException {
         return getEventoDao().buscarEvento(nome, descricao, data, responsavel, status);
+    }
+
+    public List<Evento> listarEventos() throws PersistenciaException {
+        return getEventoDao().listarEventos();
+    }
+
+    public List<Evento> eventosRealizados() throws PersistenciaException {
+        return getEventoDao().eventosRealizados();
+    }
+
+    public List<Evento> listarEventoStatus(String status) throws PersistenciaException {
+        return getEventoDao().listarEventoStatus(status);
+    }
+
+    public boolean possuiEventosRealizados() throws PersistenciaException {
+        return getEventoDao().possuiEventosRealizados();
+    }
+    
+    public Evento getEvento(Integer id) throws PersistenciaException{
+        return getEventoDao().getEvento(id);
     }
 }

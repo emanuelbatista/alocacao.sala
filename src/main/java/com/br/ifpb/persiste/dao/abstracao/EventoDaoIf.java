@@ -18,6 +18,8 @@ import java.util.List;
 public interface EventoDaoIf {
 
     void adicionar(Evento... eventos) throws PersistenciaException;
+    
+    List<Evento> listarEventos() throws PersistenciaException;
 
     void mudarStatus(Integer id, String status) throws PersistenciaException;
 
@@ -27,5 +29,14 @@ public interface EventoDaoIf {
 
     List<Sala> listarSalasDisponiveisEvento(Evento... eventos) throws PersistenciaException;
 
-    List<Evento> buscarEvento(String nome, String descricao, Timestamp data, String responsavel, String status) throws PersistenciaException;
+    List<Evento> buscarEvento(String nome, String descricao, Timestamp data, String responsavel, String... status) throws PersistenciaException;
+  
+    List<Evento> eventosRealizados() throws PersistenciaException;
+    
+    List<Evento> listarEventoStatus(String status) throws PersistenciaException;
+    
+    boolean possuiEventosRealizados() throws PersistenciaException;
+    
+    Evento getEvento(Integer id) throws PersistenciaException;
+
 }

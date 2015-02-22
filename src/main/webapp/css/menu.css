@@ -6,7 +6,7 @@ body{
 .menu{
     position: fixed;
     z-index: 2;
-    height: 41px;
+    height: 40px;
     top: 0px;
     width: 100%;
     background-color: mediumseagreen;
@@ -19,12 +19,13 @@ body{
 }
 .menu ul a,.menu li a{
     color: white;
-    padding: 12px 30px;
+/*    padding: 12px 30px;*/
 }
 .menu ul a:hover,.menu li a:hover{
     color: white;
 
 }
+
 .menu-raiz{
     display: block;
     top: -2px;
@@ -32,17 +33,21 @@ body{
     margin: 0 auto;
 }
 .menu-raiz{
-    padding: 12px 30px;
     font-weight: 600 ;
     font-size: medium;
 }
 .menu-raiz>li{
+    float: left;
     position: relative;
-    display: inline;
-    top: 0px;
+    display: block;
+    padding: 0;
     background-color: mediumaquamarine;
     margin-right: 3px; 
-    padding: 12px 30px;
+}
+.menu-raiz>li>a{
+    padding: 13px 30px;
+    line-height: 1;
+    display: block;
 }
 .menu-raiz>li:hover{
     background-color: black;  
@@ -76,10 +81,10 @@ body{
     -webkit-transition:linear 2s;
 } 
 .sub1{
-    margin-left: -10px;
+    margin-left: 28px;
 }
 .sub2{
-    margin-left: 100px;
+    margin-left: 146px;
 }
 
 

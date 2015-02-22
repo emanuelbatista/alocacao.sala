@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 public class BuscarEvento extends HttpServlet {
 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -57,8 +56,7 @@ public class BuscarEvento extends HttpServlet {
         String descricao = request.getParameter("descricao");
         String responsavel = request.getParameter("responsavel");
         Timestamp data = criarData(request.getParameter("data"));
-        String status = request.getParameter("status");
-
+        String[] status = request.getParameterValues("status");
         GerenciarEvento gerenciarEvento = new GerenciarEvento();
         List<Evento> eventos = null;
         try {

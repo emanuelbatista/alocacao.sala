@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib  prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib  prefix="f" uri="bibliotecas"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,26 +22,33 @@
             <form action="buscar-evento" method="post" class="form-inline campos">
                 <div class="form-group">
                     <label for="nome">Nome: </label>
-                    <input type="text" name="nome" id="nome" class="form-control" placeholder="Digite o nome do Evento">
-                </div>
-                <div class="form-group">
-                    <label for="descricao">Descrição: </label>
-                    <input type="text" name="descricao" id="descricao" class="form-control" placeholder="Digite a Descrição do Evento">
-                </div>
-                <div class="form-group">
-                    <label for="data">Data: </label>
-                    <input type="text" name="data" id="data" class="form-control" placeholder="Digite a Data do Evento">
-                </div>
-                <div class="form-group">
-                    <label for="responsavel">Responsável: </label>
-                    <input type="text" name="responsavel" id="responsavel" class="form-control" placeholder="Digite o Nome do Responsavel do Evento">
-                </div>
-                <div class="form-group">
-                    <label for="status">Status: </label>         
-                    <select name="status" id="status" class="form-control">
-                        <option value="Cancelado">Cancelado</option>
-                    </select>
-                </div>
+                    <input type="text" name="nome" <c:if test="${param.nome!=null}">value="${param.nome}"</c:if> id="nome" class="form-control" placeholder="Digite o nome do Evento">
+                    </div>
+                    <div class="form-group">
+                        <label for="descricao">Descrição: </label>
+                        <input type="text" name="descricao" <c:if test="${param.descricao!=null}">value="${param.descricao}"</c:if>  id="descricao" class="form-control" placeholder="Digite a Descrição do Evento">
+                    </div>
+                    <div class="form-group">
+                        <label for="data">Data: </label>
+                        <input type="text" name="data" id="data" <c:if test="${param.data!=null}">value="${param.data}"</c:if> class="form-control" placeholder="Digite a Data do Evento">
+                    </div>
+                    <div class="form-group">
+                        <label for="responsavel">Responsável: </label>
+                        <input type="text" name="responsavel" <c:if test="${param.responsavel!=null}">value="${param.responsavel}"</c:if> id="responsavel" class="form-control" placeholder="Digite o Nome do Responsavel do Evento">
+                    </div>
+                    <div class="form-group">
+                        <label>Filtro de Status: </label>         
+                        <br>
+                        <input type="checkbox" name="status" id="alocado" value="Alocado">
+                        <label for="alocado">Alocado</label>
+                        <input type="checkbox" name="status" id="cancelado" value="Cancelado">
+                        <label for="cancelado">Cancelado</label>
+                        <input type="checkbox" name="status" id="pendenteLocal" value="Pendente de Local">
+                        <label for="pendenteLocal">Pendente de Local</label>
+                        <input type="checkbox" name="status" id="realizado" value="Realizado">
+                        <label for="realizado">Realizado</label>
+                    </div>
+                <br>
                 <input type="submit" class="btn btn-success" value="Buscar">
             </form>
             <div class="tabela">
@@ -57,13 +65,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <c:forEach var="i" items="${eventosPesquisados}">
-                                <c:if test="${i.status=='Cancelado'}">
-                                    <td>i.id</td>
+                        <c:forEach var="i" items="${eventosPesquisados}">
+                            <c:if test="${i.status=='Pendente de Local'}">
+                                <tr class="warning">
                                 </c:if>
-                            </c:forEach>
-                        </tr>
+                                <c:if test="${i.status=='Cancelado'}">
+                                <tr class="danger">
+                                </c:if>
+                                <c:if test="${i.status=='Realizado'}">
+                                <tr class="active">
+                                </c:if>
+                                <c:if test="${i.status=='Alocado'}">
+                                <tr class="success">
+                                </c:if>
+                                <td>${i.id}</td>
+                                <td>${i.nome}</td>
+                                <td>${i.descricao}</td>
+                                <td>${i.responsavel}</td>
+                                <td>${f:formatarData(i.dataInicio)}</td>
+                                <td>${f:formatarData(i.dataFinal)}</td>
+                                <td>${i.status}</td>
+                            </tr>
+
+
+                        </c:forEach>
                     </tbody>
                 </table>
             </div>

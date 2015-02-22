@@ -1,14 +1,11 @@
 package com.br.ifpb.web.servlet;
 
 import com.br.ifpb.business.object.GerenciarEvento;
+import com.br.ifpb.business.object.GerenciarSala;
 import com.br.ifpb.execoes.PersistenciaException;
-import com.br.ifpb.facade.GerarEventoFacade;
 import com.br.ifpb.value.object.Evento;
 import com.br.ifpb.value.object.Sala;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,8 +19,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Emanuel Batista da Silva Filho <emanuelbatista2011@gmail.com>
  */
-@WebServlet(name = "CadastroEvento", urlPatterns = {"/cadastro-evento"})
-public class CadastroEvento extends HttpServlet {
+@WebServlet(name = "AdicionarSalaEvento", urlPatterns = {"/adicionar-sala-evento"})
+public class AdicionarSalaEvento extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,9 +33,36 @@ public class CadastroEvento extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+
+        Integer id = Integer.valueOf(request.getParameter("id"));
+
+        List<Evento> eventos = (List<Evento>) request.getSession().getAttribute("eventos");
+        if (eventos != null) {
+            try {
+                GerenciarSala gerenciarSala = new GerenciarSala();
+
+                Sala sala = gerenciarSala.getSala(id);
+
+                for (Evento evento : eventos) {
+                    evento.setSala(sala);
+                    evento.setStatus("Alocado");
+                }
+                GerenciarEvento evento = new GerenciarEvento();
+                if (eventos.get(0).getId() == null) {
+                    evento.adicionar(eventos.toArray(new Evento[0]));
+                } else {
+                    evento.alocar(id, eventos.toArray(new Evento[0]));
+                }
+            } catch (PersistenciaException ex) {
+                Logger.getLogger(AdicionarSalaEvento.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            request.getSession().removeAttribute("eventos");
+        }
 
     }
 
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -64,40 +88,7 @@ public class CadastroEvento extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-
-        String nome = request.getParameter("nome");
-        String descricao = request.getParameter("descricao");
-        Timestamp dataInicio = criarData(request.getParameter("dataInicio"));
-        Timestamp dataFinal = criarData(request.getParameter("dataFinal"));
-        String responsavel = request.getParameter("responsavel");
-        Integer repiticoes = Integer.valueOf(request.getParameter("totalRepeticao"));
-        Integer totalParticipantes = Integer.valueOf(request.getParameter("totalParticipantes"));
-        String submit = request.getParameter("submit");
-
-        try {
-            GerarEventoFacade fachada = new GerarEventoFacade();
-            List<Evento> eventos = fachada.listarEvento(nome, descricao, dataInicio, dataFinal, responsavel, totalParticipantes, repiticoes);
-
-            GerenciarEvento gerenciarEvento = new GerenciarEvento();
-            if (submit.equals("Cadastrar")) {
-                gerenciarEvento.adicionar(eventos.toArray(new Evento[0]));
-                response.sendRedirect("eventos");
-            } else {
-                List<Sala> salasDisponiveis = gerenciarEvento.listarSalasDisponiveisEvento(eventos.toArray(new Evento[0]));
-                request.getSession().setAttribute("eventos", eventos);
-                request.setAttribute("salasDisponiveis", salasDisponiveis);
-                getServletContext().getRequestDispatcher("/alocar-sala.jsp").forward(request, response);
-            }
-        } catch (PersistenciaException ex) {
-            Logger.getLogger(GerarEventoFacade.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private Timestamp criarData(String data) throws IllegalArgumentException {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        LocalDateTime localDate = LocalDateTime.parse(data, format);
-        return Timestamp.valueOf(localDate);
+        processRequest(request, response);
     }
 
     /**

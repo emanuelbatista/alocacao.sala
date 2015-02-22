@@ -12,9 +12,10 @@
     text-align: center;
 }
 .salas li{
-    display: inline-block;
+    display: block;
+    float: left;
     margin: 1%;
-    font-size: 30px;
+    font-size: 20px;
     color: white;
     position: relative;
     background-color: yellowgreen;
@@ -24,7 +25,9 @@
     text-align: center;
 }
 .salas li a{
+    display: block;
     color: white;
+    width: 100%;
 }
 .salas,.salas li{
     position: relative;

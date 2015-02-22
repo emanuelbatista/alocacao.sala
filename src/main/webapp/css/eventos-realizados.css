@@ -1,0 +1,35 @@
+
+/* 
+    Created on : 22/02/2015, 17:14:08
+    Author     : Emanuel Batista da Silva Filho <emanuelbatista2011@gmail.com>
+*/
+.caixa-container{
+    position: relative;
+    top: 80px;
+    margin:  0px;
+    padding: 0px;
+    z-index: 0;
+}
+.eventos{
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+}
+.eventos li{
+    margin: 10px 10%;
+    padding: 10px 18px;
+    border-radius: 5px;
+    font-size: medium;
+    /*    background-color: #6cd442;*/
+    overflow: hidden;
+}
+.info-evento{
+    float: left;
+}
+.opcaoes{
+    float: right;
+    display: inline;
+    position: relative;
+    top: 0px;
+    height: 100%;
+}

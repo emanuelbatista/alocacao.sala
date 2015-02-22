@@ -21,13 +21,25 @@
             <ul class="salas">
                 <c:forEach var="i" items="${salasDisponiveis}">
                     <li>
-                        <a href="alocar-sala?id=${i.id}">${i.identificacao}</a>
+                        <a href="adicionar-sala-evento?id=${i.id}">
+                        Identificação:
+                        ${i.identificacao}
+                        <br>
+                        <c:if test="${i.apelido!=null}">
+                            Apelido: ${i.apelido}
+                        </c:if>
+                        <br>
+                        Capacidade: ${i.capacidade}
+                        <br>
+                        Tipo: ${i.tipo}
+                        </a>
+                        
                     </li>
                 </c:forEach>
             </ul>
         </div>
         <div class="rodape">
-            <a href="#" class="btn btn-danger botao-cancelar">Cancelar Alocação</a>
+            <a href="#" class="btn btn-warning botao-cancelar">Cancelar Alocação e Salvar Evento</a>
         </div>
     </body>
 </html>

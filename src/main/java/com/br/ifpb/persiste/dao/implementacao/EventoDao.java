@@ -9,8 +9,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,10 +59,11 @@ public class EventoDao implements EventoDaoIf {
     public void alocar(Integer sala, Evento... eventos) throws PersistenciaException {
         try (Connection con = ConexaoBanco.getConexao()) {
             for (Evento evento : eventos) {
-                String sql = "UPDATE Evento SET id_sala=? WHERE id=?";
+                String sql = "UPDATE Evento SET id_sala=? status=? WHERE id=?";
                 PreparedStatement stat = con.prepareStatement(sql);
                 stat.setInt(1, sala);
-                stat.setInt(2, evento.getId());
+                stat.setString(2, "Alocado");
+                stat.setInt(3, evento.getId());
                 stat.executeUpdate();
             }
         } catch (ClassNotFoundException | SQLException ex) {
@@ -120,24 +123,41 @@ public class EventoDao implements EventoDaoIf {
 
     @Override
     public List<Evento> buscarEvento(String nome, String descricao,
-            Timestamp data, String responsavel, String status) throws PersistenciaException {
+            Timestamp data, String responsavel, String... status) throws PersistenciaException {
         try (Connection con = ConexaoBanco.getConexao()) {
-            StringBuilder sql=new StringBuilder("SELECT * FROM Evento E WHERE nome ilike %?% AND descricao ilike %?% "
-                    + "AND responsavel ilike %?% AND status ilike %?% ");
-            PreparedStatement stat=con.prepareStatement(sql.toString());
-            stat.setString(1, nome==null?"":nome);
-            stat.setString(2, descricao==null?"":descricao);
-            stat.setString(3, responsavel==null?"":responsavel);
-            stat.setString(4, status==null?"":status);
-            if(data!=null){
-                sql=sql.append("AND dataInicio>=? AND dataFinal<=?");
-                stat.setTimestamp(5, data);
-                stat.setTimestamp(6, data);
+            StringBuilder sql = new StringBuilder();
+            sql = sql.append("SELECT * FROM Evento E WHERE nome ilike ? AND descricao ilike ?").
+                    append(" AND responsavel ilike ? ");
+            if (status != null) {
+                sql = sql.append("AND status IN (");
             }
-            ResultSet rs=stat.executeQuery();
-            List<Evento> eventos=new LinkedList<>();
-            while(rs.next()){
-                Evento evento=new Evento();
+            for (int i = 0; status != null && i < status.length; i++) {
+                if (!(i == status.length - 1)) {
+                    sql = sql.append("?,");
+                } else {
+                    sql = sql.append("?) ");
+                }
+            }
+
+            if (data != null) {
+                sql = sql.append("AND dataInicio>= ? AND dataFinal<=?");
+            }
+            PreparedStatement stat = con.prepareStatement(sql.toString());
+            int cont = 0;
+            stat.setString(++cont, nome == null ? "%%" : "%" + nome + "%");
+            stat.setString(++cont, descricao == null ? "%%" : "%" + descricao + "%");
+            stat.setString(++cont, responsavel == null ? "%%" : "%" + responsavel + "%");
+            for (int i = 0; status != null && i < status.length; i++) {
+                stat.setString(++cont, status[i] == null ? "" : status[i]);
+            }
+            if (data != null) {
+                stat.setTimestamp(++cont, data);
+                stat.setTimestamp(++cont, data);
+            }
+            ResultSet rs = stat.executeQuery();
+            List<Evento> eventos = new LinkedList<>();
+            while (rs.next()) {
+                Evento evento = new Evento();
                 evento.setNome(rs.getString("nome"));
                 evento.setDescricao(rs.getString("descricao"));
                 evento.setId(rs.getInt("id"));
@@ -146,13 +166,133 @@ public class EventoDao implements EventoDaoIf {
                 evento.setStatus(rs.getString("status"));
                 eventos.add(evento);
             }
-            return eventos.isEmpty()?null:eventos;
-            
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(EventoDao.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            return eventos.isEmpty() ? null : eventos;
 
-        return null;
+        } catch (ClassNotFoundException | SQLException ex) {
+            throw new PersistenciaException(ex);
+        }
+    }
+
+    @Override
+    public List<Evento> listarEventos() throws PersistenciaException {
+        try (Connection con = ConexaoBanco.getConexao()) {
+            String sql = "SELECT * FROM Evento";
+            PreparedStatement stat = con.prepareStatement(sql);         
+            ResultSet rs=stat.executeQuery();
+            List<Evento> eventos=new LinkedList<>();
+            while(rs.next()){
+                Evento evento=new Evento();
+                evento.setDataFinal(rs.getTimestamp("datafinal"));
+                evento.setDataInicio(rs.getTimestamp("datainicio"));
+                evento.setDescricao(rs.getString("descricao"));
+                evento.setNome(rs.getString("nome"));
+                evento.setResponsavel(rs.getString("responsavel"));
+                evento.setId(rs.getInt("id"));
+                evento.setStatus(rs.getString("status"));
+                evento.setTotalParticipantes(rs.getInt("totalparticipantes"));
+                eventos.add(evento);
+            }
+            return eventos.isEmpty()?null:eventos;
+        } catch (ClassNotFoundException | SQLException ex) {
+            throw new PersistenciaException(ex);
+        }
+    }
+
+    @Override
+    public List<Evento> eventosRealizados() throws PersistenciaException {
+         try (Connection con = ConexaoBanco.getConexao()) {
+            String sql = "SELECT * FROM Evento WHERE dataFinal<? AND status<>? AND status<>?";
+            PreparedStatement stat = con.prepareStatement(sql);
+            stat.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            stat.setString(2, "Realizado");
+            stat.setString(3, "Cancelado");
+            ResultSet rs=stat.executeQuery();
+            List<Evento> eventos=new LinkedList<>();
+            while(rs.next()){
+                Evento evento=new Evento();
+                evento.setDataFinal(rs.getTimestamp("datafinal"));
+                evento.setDataInicio(rs.getTimestamp("datainicio"));
+                evento.setDescricao(rs.getString("descricao"));
+                evento.setNome(rs.getString("nome"));
+                evento.setResponsavel(rs.getString("responsavel"));
+                evento.setId(rs.getInt("id"));
+                evento.setStatus(rs.getString("status"));
+                evento.setTotalParticipantes(rs.getInt("totalparticipantes"));
+                eventos.add(evento);
+            }
+            return eventos.isEmpty()?null:eventos;
+        } catch (ClassNotFoundException | SQLException ex) {
+            throw new PersistenciaException(ex);
+        }
+    }
+
+    @Override
+    public List<Evento> listarEventoStatus(String status) throws PersistenciaException {
+        try (Connection con = ConexaoBanco.getConexao()) {
+            String sql = "SELECT * FROM Evento WHERE status=?";
+            PreparedStatement stat = con.prepareStatement(sql);
+            stat.setString(1, status);
+            ResultSet rs=stat.executeQuery();
+            List<Evento> eventos=new LinkedList<>();
+            while(rs.next()){
+                Evento evento=new Evento();
+                evento.setDataFinal(rs.getTimestamp("datafinal"));
+                evento.setDataInicio(rs.getTimestamp("datainicio"));
+                evento.setDescricao(rs.getString("descricao"));
+                evento.setNome(rs.getString("nome"));
+                evento.setResponsavel(rs.getString("responsavel"));
+                evento.setId(rs.getInt("id"));
+                evento.setStatus(rs.getString("status"));
+                evento.setTotalParticipantes(rs.getInt("totalparticipantes"));
+                eventos.add(evento);
+            }
+            return eventos.isEmpty()?null:eventos;
+        } catch (ClassNotFoundException | SQLException ex) {
+            throw new PersistenciaException(ex);
+        }
+    }
+
+    @Override
+    public boolean possuiEventosRealizados() throws PersistenciaException {
+        try(Connection con=ConexaoBanco.getConexao()){
+            String sql="SELECT COUNT(*) quantidade FROM Evento WHERE dataFinal<? AND status<>? AND status<>?";
+            PreparedStatement stat=con.prepareStatement(sql);
+            stat.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            stat.setString(2, "Realizado");
+            stat.setString(3, "Cancelado");
+            ResultSet rs=stat.executeQuery();
+            if(rs.next()){
+                return rs.getInt("quantidade")>0;
+            }
+            return false;
+        } catch (ClassNotFoundException | SQLException ex) {
+           throw new PersistenciaException(ex);
+        }
+    }
+
+    @Override
+    public Evento getEvento(Integer id) throws PersistenciaException {
+        try (Connection con = ConexaoBanco.getConexao()) {
+            String sql = "SELECT * FROM Evento WHERE id=?";
+            PreparedStatement stat = con.prepareStatement(sql);
+            stat.setInt(1, id);
+            ResultSet rs=stat.executeQuery();
+            if(rs.next()){
+                Evento evento=new Evento();
+                evento.setDataFinal(rs.getTimestamp("datafinal"));
+                evento.setDataInicio(rs.getTimestamp("datainicio"));
+                evento.setDescricao(rs.getString("descricao"));
+                evento.setNome(rs.getString("nome"));
+                evento.setResponsavel(rs.getString("responsavel"));
+                evento.setId(rs.getInt("id"));
+                evento.setStatus(rs.getString("status"));
+                evento.setTotalParticipantes(rs.getInt("totalparticipantes"));
+                return evento;
+            }
+            return null;
+        } catch (ClassNotFoundException | SQLException ex) {
+            throw new PersistenciaException(ex);
+        }
     }
 
 }
