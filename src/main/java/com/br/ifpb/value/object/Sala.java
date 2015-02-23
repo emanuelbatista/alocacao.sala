@@ -12,11 +12,11 @@ package com.br.ifpb.value.object;
  */
 public class Sala {
 
-    String tipo;
-    Integer id;
-    Integer capacidade;
-    String identificacao;
-    String apelido;
+    private String tipo;
+    private Integer id;
+    private Integer capacidade;
+    private String identificacao;
+    private String apelido;
 
     public Sala() {
     }

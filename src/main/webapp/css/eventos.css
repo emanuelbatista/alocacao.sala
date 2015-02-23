@@ -25,7 +25,7 @@
 .info-evento{
     float: left;
 }
-.opcaoes{
+.opcoes{
     float: right;
     display: inline;
     position: relative;
@@ -40,4 +40,20 @@
     color: white;
     background-color: #ff7575;
     border: 1px red solid;
+}
+.opcoes-eventos{
+    padding: 0px;
+    list-style: none;
+    margin: 10px 10%;
+    text-align: center;
+}
+h4,h3{
+    text-align: center;
+}
+.opcoes-eventos li{
+    display: inline-block;
+    margin: 20px 4px;
+    border-radius: 5px;
+    font-size: medium;
+    overflow: hidden;
 }

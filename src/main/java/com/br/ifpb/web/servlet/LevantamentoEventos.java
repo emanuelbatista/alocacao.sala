@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Emanuel Batista da Silva Filho <emanuelbatista2011@gmail.com>
  */
-@WebServlet(name = "Alocar", urlPatterns = {"/alocar"})
-public class Alocar extends HttpServlet {
+@WebServlet(name = "LevantamentoEventos", urlPatterns = {"/levantamento-eventos"})
+public class LevantamentoEventos extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,23 +35,34 @@ public class Alocar extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        String status = request.getParameter("status");
+        String confirmacao=request.getParameter("confirmacao");
+        Integer idEvento = Integer.valueOf(request.getParameter("id"));
+        if (status.equals(Evento.STATUS_PENDENTE_LOCAL) && confirmacao.equals(Evento.STATUS_REALIZADO)) {
+            try {
+                List<Evento> eventos = new LinkedList<>();
+                GerenciarEvento gerenciarEvento = new GerenciarEvento();
+                Evento evento = gerenciarEvento.getEvento(idEvento);
+                if (evento != null) {
+                    evento.setStatus(Evento.STATUS_REALIZADO);
+                    eventos.add(evento);
+                }
+                request.getSession().setAttribute("eventos", eventos);
+                List<Sala> salasDisponiveis = gerenciarEvento.listarSalasDisponiveisEvento(eventos.toArray(new Evento[0]));
+                request.setAttribute("salasDisponiveis", salasDisponiveis);
+                getServletContext().getRequestDispatcher("/alocar-sala.jsp").forward(request, response);
 
-        try {
-            Integer idEvento = Integer.valueOf(request.getParameter("id"));
-            List<Evento> eventos = new LinkedList<>();
-            GerenciarEvento gerenciarEvento = new GerenciarEvento();
-            Evento evento=gerenciarEvento.getEvento(idEvento);
-            if(evento!=null){
-                evento.setStatus(Evento.STATUS_ALOCADO);
-                eventos.add(evento);
+            } catch (PersistenciaException ex) {
+                Logger.getLogger(LevantamentoEventos.class.getName()).log(Level.SEVERE, null, ex);
             }
-            request.getSession().setAttribute("eventos", eventos);
-            List<Sala> salasDisponiveis = gerenciarEvento.listarSalasDisponiveisEvento(eventos.toArray(new Evento[0]));
-            request.setAttribute("salasDisponiveis", salasDisponiveis);
-            getServletContext().getRequestDispatcher("/alocar-sala.jsp").forward(request, response);
-
-        } catch (PersistenciaException ex) {
-            Logger.getLogger(GerarEventoFacade.class.getName()).log(Level.SEVERE, null, ex);
+        }else{
+            try {
+                GerenciarEvento gerenciarEvento=new GerenciarEvento();
+                gerenciarEvento.mudarStatus(idEvento, confirmacao);
+                response.sendRedirect("eventos");
+            } catch (PersistenciaException ex) {
+                Logger.getLogger(LevantamentoEventos.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }

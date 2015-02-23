@@ -25,7 +25,7 @@ public interface EventoDaoIf {
 
     void alocar(Integer id_sala, Evento... evento) throws PersistenciaException;
 
-    void desalocar(Integer id_evento, String id_sala) throws PersistenciaException;
+    void desalocar(Integer id_evento) throws PersistenciaException;
 
     List<Sala> listarSalasDisponiveisEvento(Evento... eventos) throws PersistenciaException;
 

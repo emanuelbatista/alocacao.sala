@@ -73,4 +73,12 @@ public class GerenciarEvento {
     public Evento getEvento(Integer id) throws PersistenciaException{
         return getEventoDao().getEvento(id);
     }
+    
+    public void desalocar(Integer id_evento) throws PersistenciaException{
+        getEventoDao().desalocar(id_evento);
+    }
+    
+    public void mudarStatus(Integer id, String status) throws PersistenciaException{
+        getEventoDao().mudarStatus(id, status);
+    }
 }

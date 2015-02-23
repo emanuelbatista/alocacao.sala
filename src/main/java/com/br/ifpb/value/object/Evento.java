@@ -7,15 +7,19 @@ import java.sql.Timestamp;
  * @author Emanuel
  */
 public class Evento {
-    Integer id;
-    String nome;
-    String descricao;
-    Timestamp dataInicio;
-    Timestamp dataFinal;
-    String responsavel;
-    Integer totalParticipantes;
-    String status;
-    Sala sala;
+    public static final String STATUS_ALOCADO="Alocado";
+    public static final String STATUS_REALIZADO="Realizado";
+    public static final String STATUS_CANCELADO="Cancelado";
+    public static final String STATUS_PENDENTE_LOCAL="Pendente de Local";
+    private Integer id;
+    private String nome;
+    private String descricao;
+    private Timestamp dataInicio;
+    private Timestamp dataFinal;
+    private String responsavel;
+    private Integer totalParticipantes;
+    private String status;
+    private Sala sala;
 
     public Evento() {}
 

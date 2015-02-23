@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -52,17 +53,25 @@ public class EventoDao implements EventoDaoIf {
 
     @Override
     public void mudarStatus(Integer id, String status) throws PersistenciaException {
-
+        try (Connection con = ConexaoBanco.getConexao()) {
+           String sql="UPDATE Evento SET status=? WHERE id=?";
+           PreparedStatement stat=con.prepareStatement(sql);
+           stat.setString(1, status);
+           stat.setInt(2, id);
+           stat.executeUpdate();
+        } catch (ClassNotFoundException | SQLException ex) {
+            throw new PersistenciaException(ex);
+        }
     }
 
     @Override
     public void alocar(Integer sala, Evento... eventos) throws PersistenciaException {
         try (Connection con = ConexaoBanco.getConexao()) {
             for (Evento evento : eventos) {
-                String sql = "UPDATE Evento SET id_sala=? status=? WHERE id=?";
+                String sql = "UPDATE Evento SET id_sala=?, status=? WHERE id=?";
                 PreparedStatement stat = con.prepareStatement(sql);
                 stat.setInt(1, sala);
-                stat.setString(2, "Alocado");
+                stat.setString(2, evento.getStatus());
                 stat.setInt(3, evento.getId());
                 stat.executeUpdate();
             }
@@ -72,8 +81,17 @@ public class EventoDao implements EventoDaoIf {
     }
 
     @Override
-    public void desalocar(Integer id_evento, String id_sala) throws PersistenciaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void desalocar(Integer id_evento) throws PersistenciaException {
+        try (Connection con = ConexaoBanco.getConexao()) {
+            String sql = "UPDATE Evento SET id_sala=?, status=? WHERE id=?";
+            PreparedStatement stat = con.prepareStatement(sql);
+            stat.setObject(1, null, Types.INTEGER);
+            stat.setString(2, "Pendente de Local");
+            stat.setInt(3, id_evento);
+            stat.executeUpdate();
+        } catch (ClassNotFoundException | SQLException ex) {
+            throw new PersistenciaException(ex);
+        }
     }
 
     @Override
@@ -84,8 +102,8 @@ public class EventoDao implements EventoDaoIf {
                 sql = sql.append("(SELECT S.tipo,S.id,S.capacidade,S.identificacao,S.apelido FROM Sala S)");
                 for (Evento evento : eventos) {
                     sql = sql.append("EXCEPT (SELECT S.tipo,S.id,S.capacidade,S.identificacao,S.apelido FROM Sala S JOIN Evento E ON S.id=E.id_sala WHERE ");
-                    sql = sql.append("E.dataInicio>=? AND E.dataFinal<=? OR E.dataInicio<=? AND E.dataFinal>=? OR ");
-                    sql = sql.append("E.dataInicio>=?AND E.dataFinal>=? AND E.dataInicio<=? AND E.dataFinal<=?) ");
+                    sql = sql.append("E.dataInicio>=? AND E.dataFinal<=? AND status<>? OR E.dataInicio<=? AND E.dataFinal>=? AND status<>? OR ");
+                    sql = sql.append("E.dataInicio>=?AND E.dataFinal>=? AND status<>? AND E.dataInicio<=? AND E.dataFinal<=?) ");
                 }
                 sql = sql.append("EXCEPT (SELECT S.tipo,S.id,S.capacidade,S.identificacao,S.apelido FROM Sala S WHERE S.capacidade<?)");
                 PreparedStatement stat = con.prepareStatement(sql.toString());
@@ -93,10 +111,13 @@ public class EventoDao implements EventoDaoIf {
                 for (Evento evento : eventos) {
                     stat.setTimestamp(++cont, evento.getDataInicio());
                     stat.setTimestamp(++cont, evento.getDataInicio());
+                    stat.setString(++cont, Evento.STATUS_CANCELADO);
                     stat.setTimestamp(++cont, evento.getDataFinal());
                     stat.setTimestamp(++cont, evento.getDataFinal());
+                    stat.setString(++cont, Evento.STATUS_CANCELADO);
                     stat.setTimestamp(++cont, evento.getDataInicio());
                     stat.setTimestamp(++cont, evento.getDataInicio());
+                    stat.setString(++cont, Evento.STATUS_CANCELADO);
                     stat.setTimestamp(++cont, evento.getDataFinal());
                     stat.setTimestamp(++cont, evento.getDataFinal());
                 }
@@ -176,12 +197,13 @@ public class EventoDao implements EventoDaoIf {
     @Override
     public List<Evento> listarEventos() throws PersistenciaException {
         try (Connection con = ConexaoBanco.getConexao()) {
-            String sql = "SELECT * FROM Evento";
-            PreparedStatement stat = con.prepareStatement(sql);         
-            ResultSet rs=stat.executeQuery();
-            List<Evento> eventos=new LinkedList<>();
-            while(rs.next()){
-                Evento evento=new Evento();
+            String sql = "SELECT * FROM Evento WHERE status<>?";
+            PreparedStatement stat = con.prepareStatement(sql);
+            stat.setString(1, Evento.STATUS_CANCELADO);
+            ResultSet rs = stat.executeQuery();
+            List<Evento> eventos = new LinkedList<>();
+            while (rs.next()) {
+                Evento evento = new Evento();
                 evento.setDataFinal(rs.getTimestamp("datafinal"));
                 evento.setDataInicio(rs.getTimestamp("datainicio"));
                 evento.setDescricao(rs.getString("descricao"));
@@ -190,9 +212,11 @@ public class EventoDao implements EventoDaoIf {
                 evento.setId(rs.getInt("id"));
                 evento.setStatus(rs.getString("status"));
                 evento.setTotalParticipantes(rs.getInt("totalparticipantes"));
+                SalaDao salaDao = new SalaDao();
+                evento.setSala(salaDao.getSala(rs.getInt("id_sala")));
                 eventos.add(evento);
             }
-            return eventos.isEmpty()?null:eventos;
+            return eventos.isEmpty() ? null : eventos;
         } catch (ClassNotFoundException | SQLException ex) {
             throw new PersistenciaException(ex);
         }
@@ -200,16 +224,16 @@ public class EventoDao implements EventoDaoIf {
 
     @Override
     public List<Evento> eventosRealizados() throws PersistenciaException {
-         try (Connection con = ConexaoBanco.getConexao()) {
+        try (Connection con = ConexaoBanco.getConexao()) {
             String sql = "SELECT * FROM Evento WHERE dataFinal<? AND status<>? AND status<>?";
             PreparedStatement stat = con.prepareStatement(sql);
             stat.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
             stat.setString(2, "Realizado");
             stat.setString(3, "Cancelado");
-            ResultSet rs=stat.executeQuery();
-            List<Evento> eventos=new LinkedList<>();
-            while(rs.next()){
-                Evento evento=new Evento();
+            ResultSet rs = stat.executeQuery();
+            List<Evento> eventos = new LinkedList<>();
+            while (rs.next()) {
+                Evento evento = new Evento();
                 evento.setDataFinal(rs.getTimestamp("datafinal"));
                 evento.setDataInicio(rs.getTimestamp("datainicio"));
                 evento.setDescricao(rs.getString("descricao"));
@@ -218,9 +242,11 @@ public class EventoDao implements EventoDaoIf {
                 evento.setId(rs.getInt("id"));
                 evento.setStatus(rs.getString("status"));
                 evento.setTotalParticipantes(rs.getInt("totalparticipantes"));
+                SalaDao salaDao = new SalaDao();
+                evento.setSala(salaDao.getSala(rs.getInt("id_sala")));
                 eventos.add(evento);
             }
-            return eventos.isEmpty()?null:eventos;
+            return eventos.isEmpty() ? null : eventos;
         } catch (ClassNotFoundException | SQLException ex) {
             throw new PersistenciaException(ex);
         }
@@ -232,10 +258,10 @@ public class EventoDao implements EventoDaoIf {
             String sql = "SELECT * FROM Evento WHERE status=?";
             PreparedStatement stat = con.prepareStatement(sql);
             stat.setString(1, status);
-            ResultSet rs=stat.executeQuery();
-            List<Evento> eventos=new LinkedList<>();
-            while(rs.next()){
-                Evento evento=new Evento();
+            ResultSet rs = stat.executeQuery();
+            List<Evento> eventos = new LinkedList<>();
+            while (rs.next()) {
+                Evento evento = new Evento();
                 evento.setDataFinal(rs.getTimestamp("datafinal"));
                 evento.setDataInicio(rs.getTimestamp("datainicio"));
                 evento.setDescricao(rs.getString("descricao"));
@@ -246,7 +272,7 @@ public class EventoDao implements EventoDaoIf {
                 evento.setTotalParticipantes(rs.getInt("totalparticipantes"));
                 eventos.add(evento);
             }
-            return eventos.isEmpty()?null:eventos;
+            return eventos.isEmpty() ? null : eventos;
         } catch (ClassNotFoundException | SQLException ex) {
             throw new PersistenciaException(ex);
         }
@@ -254,19 +280,19 @@ public class EventoDao implements EventoDaoIf {
 
     @Override
     public boolean possuiEventosRealizados() throws PersistenciaException {
-        try(Connection con=ConexaoBanco.getConexao()){
-            String sql="SELECT COUNT(*) quantidade FROM Evento WHERE dataFinal<? AND status<>? AND status<>?";
-            PreparedStatement stat=con.prepareStatement(sql);
+        try (Connection con = ConexaoBanco.getConexao()) {
+            String sql = "SELECT COUNT(*) quantidade FROM Evento WHERE dataFinal<? AND status<>? AND status<>?";
+            PreparedStatement stat = con.prepareStatement(sql);
             stat.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
             stat.setString(2, "Realizado");
             stat.setString(3, "Cancelado");
-            ResultSet rs=stat.executeQuery();
-            if(rs.next()){
-                return rs.getInt("quantidade")>0;
+            ResultSet rs = stat.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("quantidade") > 0;
             }
             return false;
         } catch (ClassNotFoundException | SQLException ex) {
-           throw new PersistenciaException(ex);
+            throw new PersistenciaException(ex);
         }
     }
 
@@ -276,9 +302,9 @@ public class EventoDao implements EventoDaoIf {
             String sql = "SELECT * FROM Evento WHERE id=?";
             PreparedStatement stat = con.prepareStatement(sql);
             stat.setInt(1, id);
-            ResultSet rs=stat.executeQuery();
-            if(rs.next()){
-                Evento evento=new Evento();
+            ResultSet rs = stat.executeQuery();
+            if (rs.next()) {
+                Evento evento = new Evento();
                 evento.setDataFinal(rs.getTimestamp("datafinal"));
                 evento.setDataInicio(rs.getTimestamp("datainicio"));
                 evento.setDescricao(rs.getString("descricao"));

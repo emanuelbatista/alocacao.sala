@@ -39,7 +39,7 @@
             </ul>
         </div>
         <div class="rodape">
-            <a href="#" class="btn btn-warning botao-cancelar">Cancelar Alocação e Salvar Evento</a>
+            <a href="salvar-eventos" class="btn btn-warning botao-cancelar">Cancelar Alocação e Salvar Evento</a>
         </div>
     </body>
 </html>

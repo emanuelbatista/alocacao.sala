@@ -44,12 +44,12 @@ public class AdicionarSalaEvento extends HttpServlet {
 
                 Sala sala = gerenciarSala.getSala(id);
 
-                for (Evento evento : eventos) {
-                    evento.setSala(sala);
-                    evento.setStatus("Alocado");
-                }
                 GerenciarEvento evento = new GerenciarEvento();
                 if (eventos.get(0).getId() == null) {
+                    for (int i=0;i<eventos.size();i++) { 
+                        eventos.get(i).setSala(sala);
+                        eventos.get(i).setStatus(Evento.STATUS_ALOCADO);
+                    }
                     evento.adicionar(eventos.toArray(new Evento[0]));
                 } else {
                     evento.alocar(id, eventos.toArray(new Evento[0]));
@@ -57,8 +57,9 @@ public class AdicionarSalaEvento extends HttpServlet {
             } catch (PersistenciaException ex) {
                 Logger.getLogger(AdicionarSalaEvento.class.getName()).log(Level.SEVERE, null, ex);
             }
-            request.getSession().removeAttribute("eventos");
         }
+        request.getSession().removeAttribute("eventos");
+        response.sendRedirect("eventos");
 
     }
 

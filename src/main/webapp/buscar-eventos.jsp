@@ -73,7 +73,7 @@
                                 <tr class="danger">
                                 </c:if>
                                 <c:if test="${i.status=='Realizado'}">
-                                <tr class="active">
+                                <tr class="info">
                                 </c:if>
                                 <c:if test="${i.status=='Alocado'}">
                                 <tr class="success">

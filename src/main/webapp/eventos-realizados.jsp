@@ -44,11 +44,12 @@
                                     <b>Total de Parcipantes: </b>${evento.totalParticipantes}
                                     <br>
                                     <b>Status: </b>${evento.status}
+                                   
                                 </div>
 
-                                <div class="opcaoes"> 
-                                   <a href="" class="btn btn-success">Realizado</a>
-                                    <a href="" class="btn btn-warning">Cancelado</a>
+                                <div class="opcoes"> 
+                                   <a href="levantamento-eventos?id=${evento.id}&confirmacao=Realizado&status=${evento.status}" class="btn btn-success">Realizado</a>
+                                    <a href="levantamento-eventos?id=${evento.id}&confirmacao=Cancelado&status=${evento.status}" class="btn btn-warning">Cancelado</a>
 
                                     </div>
                                 </li>

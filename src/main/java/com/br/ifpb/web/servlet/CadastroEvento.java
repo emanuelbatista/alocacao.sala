@@ -78,7 +78,6 @@ public class CadastroEvento extends HttpServlet {
         try {
             GerarEventoFacade fachada = new GerarEventoFacade();
             List<Evento> eventos = fachada.listarEvento(nome, descricao, dataInicio, dataFinal, responsavel, totalParticipantes, repiticoes);
-
             GerenciarEvento gerenciarEvento = new GerenciarEvento();
             if (submit.equals("Cadastrar")) {
                 gerenciarEvento.adicionar(eventos.toArray(new Evento[0]));

@@ -20,24 +20,35 @@
         <jsp:include page="menu.html"/>
         <div class="caixa-container">
             <article>
+                <section>
+                    <h4>Eventos por Status</h4>
+                    <ul class="opcoes-eventos">
+                        <li><a href="eventos-status?status=Alocado" class="btn btn-success">Alocados</a></li>
+                        <li><a href="eventos-status?status=Cancelado" class="btn btn-danger">Cancelados</a></li>
+                        <li><a href="eventos-status?status=Realizado" class="btn btn-info">Realizados</a></li>
+                        <li><a href="eventos-status?status=Pendente%20de%20Local" class="btn btn-warning">Pendente de Local</a></li>
+                    </ul>
+                </section>
                 <c:if test="${possuiEventosRealizados}">
                     <section>
                         <div class="notificacao">
                             Existe eventos realizados confirme os mesmos
                             <br>
-                            Clique aqui: <a href="">Eventos Realizados</a>
+                            Clique aqui: <a href="eventos-realizados">Eventos Realizados</a>
                         </div>
                     </section>
                 </c:if>
                 <section>
+                    <h3>Eventos</h3>
                     <ul class="eventos">
                         <c:forEach var="evento" items="${eventos}">
                             <li 
-                                class="
-                                <c:if test="${evento.status=='Alocado'}">bg-success</c:if>
-                                <c:if test="${evento.status=='Pendente de Local'}">bg-warning</c:if>
 
-                                    ">
+                                <c:if test="${evento.status=='Alocado'}">class="bg-success"</c:if>
+                                <c:if test="${evento.status=='Pendente de Local'}">class="bg-warning"</c:if>
+                                <c:if test="${evento.status=='Realizado'}">class="bg-info"</c:if>
+                                <c:if test="${evento.status=='Cancelado'}">class="bg-danger"</c:if>
+                                    >
                                     <div class="info-evento">
                                         <b>Nome: </b>${evento.nome}
                                     <br>
@@ -53,12 +64,16 @@
                                     <b>Total de Parcipantes: </b>${evento.totalParticipantes}
                                     <br>
                                     <b>Status: </b>${evento.status}
+                                    <c:if test="${evento.sala!=null}">
+                                        <br>
+                                        <b>Sala Alocada: </b>${evento.sala.identificacao}
+                                    </c:if>
                                 </div>
 
-                                <div class="opcaoes"> 
-                                    <c:if test="${evento.status=='Alocado'}"><a href="" class="btn btn-warning">Desalocar</a></c:if>
+                                <div class="opcoes"> 
+                                    <c:if test="${evento.status=='Alocado'}"><a href="desalocar?id=${evento.id}" class="btn btn-warning">Desalocar</a></c:if>
                                     <c:if test="${evento.status=='Pendente de Local'}"><a href="alocar?id=${evento.id}" class="btn btn-success">Alocar</a></c:if>
-
+                                    <c:if test="${evento.status!='Cancelado'}"><a href="cancelar-evento?id=${evento.id}" class="btn btn-danger">Cancelar</a></c:if>
                                     </div>
                                 </li>
                         </c:forEach>
