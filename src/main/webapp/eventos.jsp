@@ -42,8 +42,7 @@
                     <h3>Eventos</h3>
                     <ul class="eventos">
                         <c:forEach var="evento" items="${eventos}">
-                            <li 
-
+                            <li
                                 <c:if test="${evento.status=='Alocado'}">class="bg-success"</c:if>
                                 <c:if test="${evento.status=='Pendente de Local'}">class="bg-warning"</c:if>
                                 <c:if test="${evento.status=='Realizado'}">class="bg-info"</c:if>
@@ -72,7 +71,7 @@
 
                                 <div class="opcoes"> 
                                     <c:if test="${evento.status=='Alocado'}"><a href="desalocar?id=${evento.id}" class="btn btn-warning">Desalocar</a></c:if>
-                                    <c:if test="${evento.status=='Pendente de Local'}"><a href="alocar?id=${evento.id}" class="btn btn-success">Alocar</a></c:if>
+                                    <c:if test="${evento.status=='Pendente de Local'}"><a href="evento-alocacao?id=${evento.id}" class="btn btn-success">Alocar</a></c:if>
                                     <c:if test="${evento.status!='Cancelado'}"><a href="cancelar-evento?id=${evento.id}" class="btn btn-danger">Cancelar</a></c:if>
                                     </div>
                                 </li>

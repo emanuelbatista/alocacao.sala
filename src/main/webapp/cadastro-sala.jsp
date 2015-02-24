@@ -31,9 +31,9 @@
                     <select class="form-control" name="tipo" id="tipo">
                         <option value="Aula Normal">Aula Normal</option>
                         <option value="Aula Inteligente">Aula Inteligente</option>
-                        <option value="LaboratÃ³rio">Laboratorio</option>
-                        <option value="ConferÃªncia">Conferência</option>
-                        <option value="Video ConferÃªncia">Video Conferência</option>
+                        <option value="Laboratório">Laboratorio</option>
+                        <option value="Conferência">Conferência</option>
+                        <option value="Video Conferência">Video Conferência</option>
                     </select>
                 </div>
                 <div class="form-group submit">

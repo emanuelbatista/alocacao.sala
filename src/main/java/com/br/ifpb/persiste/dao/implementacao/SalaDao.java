@@ -35,7 +35,7 @@ public class SalaDao implements SalaDaoIf {
     @Override
     public void editar(Sala sala) throws PersistenciaException {
         try (Connection con = ConexaoBanco.getConexao()) {
-            String sql = "UPDATE Sala SET tipo=?, apelido=?, capacidade=?,identificao=? WHERE id=?";
+            String sql = "UPDATE Sala SET tipo=?, apelido=?, capacidade=?,identificacao=? WHERE id=?";
             PreparedStatement stat = con.prepareStatement(sql);
             stat.setString(1, sala.getTipo());
             stat.setString(2, sala.getApelido());

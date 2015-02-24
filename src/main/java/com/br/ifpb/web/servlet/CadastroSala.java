@@ -53,6 +53,7 @@ public class CadastroSala extends HttpServlet {
         } catch (NumberFormatException | PersistenciaException ex) {
             ex.printStackTrace();
         }
+        response.sendRedirect("salas");
     }
 
     /**

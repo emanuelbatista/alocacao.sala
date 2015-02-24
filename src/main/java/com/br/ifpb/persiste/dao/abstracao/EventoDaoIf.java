@@ -38,5 +38,7 @@ public interface EventoDaoIf {
     boolean possuiEventosRealizados() throws PersistenciaException;
     
     Evento getEvento(Integer id) throws PersistenciaException;
+    
+    void desalocarPelaSala(Integer id_sala) throws PersistenciaException;
 
 }

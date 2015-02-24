@@ -21,7 +21,7 @@
             <ul class="salas">
                 <c:forEach var="i" items="${salasDisponiveis}">
                     <li>
-                        <a href="adicionar-sala-evento?id=${i.id}">
+                        <a href="alocar?id=${i.id}">
                         Identificação:
                         ${i.identificacao}
                         <br>

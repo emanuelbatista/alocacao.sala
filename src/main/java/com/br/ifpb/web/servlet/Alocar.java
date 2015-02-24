@@ -1,12 +1,11 @@
 package com.br.ifpb.web.servlet;
 
 import com.br.ifpb.business.object.GerenciarEvento;
+import com.br.ifpb.business.object.GerenciarSala;
 import com.br.ifpb.execoes.PersistenciaException;
-import com.br.ifpb.facade.GerarEventoFacade;
 import com.br.ifpb.value.object.Evento;
 import com.br.ifpb.value.object.Sala;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,23 +35,31 @@ public class Alocar extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        try {
-            Integer idEvento = Integer.valueOf(request.getParameter("id"));
-            List<Evento> eventos = new LinkedList<>();
-            GerenciarEvento gerenciarEvento = new GerenciarEvento();
-            Evento evento=gerenciarEvento.getEvento(idEvento);
-            if(evento!=null){
-                evento.setStatus(Evento.STATUS_ALOCADO);
-                eventos.add(evento);
-            }
-            request.getSession().setAttribute("eventos", eventos);
-            List<Sala> salasDisponiveis = gerenciarEvento.listarSalasDisponiveisEvento(eventos.toArray(new Evento[0]));
-            request.setAttribute("salasDisponiveis", salasDisponiveis);
-            getServletContext().getRequestDispatcher("/alocar-sala.jsp").forward(request, response);
+        Integer id = Integer.valueOf(request.getParameter("id"));
 
-        } catch (PersistenciaException ex) {
-            Logger.getLogger(GerarEventoFacade.class.getName()).log(Level.SEVERE, null, ex);
+        List<Evento> eventos = (List<Evento>) request.getSession().getAttribute("eventosTemporario");
+        if (eventos != null) {
+            try {
+                GerenciarSala gerenciarSala = new GerenciarSala();
+
+                Sala sala = gerenciarSala.getSala(id);
+
+                GerenciarEvento evento = new GerenciarEvento();
+                if (eventos.get(0).getId() == null) {
+                    for (int i=0;i<eventos.size();i++) { 
+                        eventos.get(i).setSala(sala);
+                        eventos.get(i).setStatus(Evento.STATUS_ALOCADO);
+                    }
+                    evento.adicionar(eventos.toArray(new Evento[0]));
+                } else {
+                    evento.alocar(id, eventos.toArray(new Evento[0]));
+                }
+            } catch (PersistenciaException ex) {
+                Logger.getLogger(Alocar.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        request.getSession().removeAttribute("eventos");
+        response.sendRedirect("eventos");
 
     }
 

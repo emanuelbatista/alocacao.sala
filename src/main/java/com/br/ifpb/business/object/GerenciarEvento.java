@@ -81,4 +81,8 @@ public class GerenciarEvento {
     public void mudarStatus(Integer id, String status) throws PersistenciaException{
         getEventoDao().mudarStatus(id, status);
     }
+    
+    public void desalocarPelaSala(Integer id_sala) throws PersistenciaException{
+         getEventoDao().desalocarPelaSala(id_sala);
+     }
 }

@@ -12,26 +12,6 @@ import java.util.List;
  */
 public class GerarEventoFacade{
 
-    private enum EventoConst{
-        STATUS_DEFAULT("Pendente de Local");
-        
-        private String value;
-
-        private EventoConst(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-        
-        
-        
-    }
    
     public List<Evento> listarEvento(String nome, String descricao, Timestamp dataInicio,
             Timestamp dataFinal, String responsavel, Integer totalParticipantes, Integer repiticoes) {
@@ -41,7 +21,7 @@ public class GerarEventoFacade{
             evento.setNome(nome);
             evento.setDescricao(descricao);
             evento.setResponsavel(responsavel);
-            evento.setStatus(EventoConst.STATUS_DEFAULT.getValue());
+            evento.setStatus(Evento.STATUS_PENDENTE_LOCAL);
             evento.setTotalParticipantes(totalParticipantes);
             evento.setDataInicio(gerarDataAposUmSemana(dataInicio, i));
             evento.setDataFinal(gerarDataAposUmSemana(dataFinal, i));        

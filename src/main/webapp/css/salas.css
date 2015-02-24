@@ -1,0 +1,38 @@
+/* 
+    Created on : 23/02/2015, 20:10:44
+    Author     : Emanuel Batista da Silva Filho <emanuelbatista2011@gmail.com>
+*/
+
+.caixa-container{
+    position: relative;
+    top: 80px;
+    margin:  0px;
+    padding: 0px;
+    z-index: 0;
+}
+h4,h3{
+    text-align: center;
+}
+.salas{
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+}
+.salas li{
+    margin: 10px 10%;
+    padding: 10px 18px;
+    border-radius: 5px;
+    font-size: medium;
+    background-color: #6cd442;
+    overflow: hidden;
+}
+.info-sala{
+    float: left;
+}
+.opcoes{
+    float: right;
+    display: inline;
+    position: relative;
+    top: 0px;
+    height: 100%;
+}
