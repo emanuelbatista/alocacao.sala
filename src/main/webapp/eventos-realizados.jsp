@@ -14,7 +14,7 @@
         <link href="dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="css/menu.css" rel="stylesheet" type="text/css">
         <link href="css/eventos-realizados.css" rel="stylesheet" type="text/css">
-        <title>JSP Page</title>
+        <title>Eventos Levantamento</title>
     </head>
     <body>
         <jsp:include page="menu.html"/>

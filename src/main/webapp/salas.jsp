@@ -13,7 +13,7 @@
         <link href="dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="css/menu.css" rel="stylesheet" type="text/css">
         <link href="css/salas.css" rel="stylesheet" type="text/css">
-        <title>JSP Page</title>
+        <title>Salas</title>
     </head>
     <body>
         <jsp:include page="menu.html"/>

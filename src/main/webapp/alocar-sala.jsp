@@ -11,9 +11,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="css/alocar-sala.css" rel="stylesheet" type="text/css">
         <link href="css/menu.css" rel="stylesheet" type="text/css">
-        <title>JSP Page</title>
+        <link href="css/alocar-sala.css" rel="stylesheet" type="text/css">
+        <title>Alocar Sala</title>
     </head>
     <body>
         <jsp:include page="menu.html"/>
