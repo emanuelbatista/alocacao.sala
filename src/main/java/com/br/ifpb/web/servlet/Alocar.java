@@ -34,16 +34,12 @@ public class Alocar extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-
         Integer id = Integer.valueOf(request.getParameter("id"));
-
         List<Evento> eventos = (List<Evento>) request.getSession().getAttribute("eventosTemporario");
         if (eventos != null) {
             try {
                 GerenciarSala gerenciarSala = new GerenciarSala();
-
                 Sala sala = gerenciarSala.getSala(id);
-
                 GerenciarEvento evento = new GerenciarEvento();
                 if (eventos.get(0).getId() == null) {
                     for (int i=0;i<eventos.size();i++) { 

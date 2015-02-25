@@ -52,4 +52,8 @@ public class GerenciarSala {
     public void remover(Integer id) throws PersistenciaException{
         getSalaDao().remover(id);
     }
+    
+    public boolean existeIdentificacao(String identificacao) throws PersistenciaException{
+         return getSalaDao().existeIdentificacao(identificacao);
+     }
 }

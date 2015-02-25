@@ -156,7 +156,7 @@ public class EventoDao implements EventoDaoIf {
                 }
             }
             if (data != null) {
-                sql = sql.append("AND dataInicio>= ? AND dataFinal<=?");
+                sql = sql.append("AND dataInicio<=? AND dataFinal>=?");
             }
             PreparedStatement stat = con.prepareStatement(sql.toString());
             int cont = 0;

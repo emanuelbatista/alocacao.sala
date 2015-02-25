@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -101,6 +103,20 @@ public class SalaDao implements SalaDaoIf {
         } catch (ClassNotFoundException | SQLException ex) {
             throw new PersistenciaException(ex);
         }
+    }
+
+    @Override
+    public boolean existeIdentificacao(String identificacao) throws PersistenciaException {
+        try(Connection con=ConexaoBanco.getConexao()){
+            String sql="SELECT * FROM Sala WHERE identificacao=?";
+            PreparedStatement stat=con.prepareStatement(sql);
+            stat.setString(1, identificacao);
+            ResultSet rs=stat.executeQuery();
+            return rs.next();
+        } catch (ClassNotFoundException | SQLException ex) {
+            throw new PersistenciaException(ex);
+        }
+      
     }
 
 }

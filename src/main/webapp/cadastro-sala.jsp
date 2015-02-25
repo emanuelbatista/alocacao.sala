@@ -1,5 +1,6 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,6 +13,11 @@
     <body>
         <%@include file="menu.html"%>
         <div class="formulario">
+            <c:if test="${mensagemErro!=null}">
+                <div class="notificacao">
+                    ${mensagemErro}
+                </div>
+            </c:if>
             <h3>Cadastro de Sala</h3>
             <form action="cadastro-sala" method="post">
                 <div class="form-group">
@@ -24,7 +30,7 @@
                 </div>
                 <div class="form-group">
                     <label for="capacidade">Capacidade de Pessoas na Sala</label>
-                    <input type="number" name="capacidade" required class="form-control" id="capacidade" placeholder="Digite capacidade da sala">
+                    <input type="number" min="1" name="capacidade" required class="form-control" id="capacidade" placeholder="Digite capacidade da sala">
                 </div>
                 <div class="form-group">
                     <label for="tipo">Tipo de Sala</label>
@@ -38,7 +44,7 @@
                 </div>
                 <div class="form-group submit">
                     <input type="submit" class="btn btn-success" value="Cadastrar">
-                    
+
                 </div>
             </form>
         </div>

@@ -2,6 +2,7 @@ package com.br.ifpb.web.servlet;
 
 import com.br.ifpb.business.object.GerenciarSala;
 import com.br.ifpb.execoes.PersistenciaException;
+import com.br.ifpb.value.object.Sala;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -49,11 +50,17 @@ public class CadastroSala extends HttpServlet {
             String apelido = request.getParameter("apelido");
 
             GerenciarSala gerenciarSala = new GerenciarSala();
-            gerenciarSala.adicionar(identificacao, apelido, tipo, capacidade);
+            if (!gerenciarSala.existeIdentificacao(identificacao)) {
+                gerenciarSala.adicionar(identificacao, apelido, tipo, capacidade);
+                response.sendRedirect("salas");
+            }else{
+                String mensagemErro="Identificacao já Existe";
+                request.setAttribute("mensagemErro", mensagemErro);
+                getServletContext().getRequestDispatcher("/cadastro-sala.jsp").forward(request, response);
+            }
         } catch (NumberFormatException | PersistenciaException ex) {
             ex.printStackTrace();
         }
-        response.sendRedirect("salas");
     }
 
     /**

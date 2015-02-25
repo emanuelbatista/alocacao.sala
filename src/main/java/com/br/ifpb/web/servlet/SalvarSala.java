@@ -2,6 +2,7 @@ package com.br.ifpb.web.servlet;
 
 import com.br.ifpb.business.object.GerenciarSala;
 import com.br.ifpb.execoes.PersistenciaException;
+import com.br.ifpb.value.object.Sala;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -37,15 +38,20 @@ public class SalvarSala extends HttpServlet {
             Integer capacidade = Integer.valueOf(request.getParameter("capacidade"));
             String identificacao = request.getParameter("identificacao");
             String apelido = request.getParameter("apelido");
-
             GerenciarSala gerenciarSala = new GerenciarSala();
-            gerenciarSala.editar(id, identificacao, apelido, tipo, capacidade);
+            Sala sala=gerenciarSala.getSala(id);
+            if (!gerenciarSala.existeIdentificacao(identificacao) || sala.getIdentificacao().equals(identificacao)) {
+                gerenciarSala.editar(id, identificacao, apelido, tipo, capacidade);
+                response.sendRedirect("salas");
+            }else{
+                String mensagemErro="Identificacao já Existe";
+                request.setAttribute("mensagemErro", mensagemErro);
+                getServletContext().getRequestDispatcher("/editar-sala").forward(request, response);
+            }
         } catch (PersistenciaException ex) {
             Logger.getLogger(SalvarSala.class.getName()).log(Level.SEVERE, null, ex);
         }
-        response.sendRedirect("salas");
-        
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

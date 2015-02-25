@@ -18,6 +18,11 @@
     <body>
         <%@include file="menu.html"%>
         <div class="formulario">
+            <c:if test="${mensagemErro!=null}">
+                <div class="notificacao">
+                    ${mensagemErro}
+                </div>
+            </c:if>
             <h3>Cadastro de Sala</h3>
             <form action="salvar-sala" method="post">
                 <div class="form-group">
@@ -30,7 +35,7 @@
                 </div>
                 <div class="form-group">
                     <label for="capacidade">Capacidade de Pessoas na Sala</label>
-                    <input type="number" value="${sala.capacidade}" name="capacidade" required class="form-control" id="capacidade" placeholder="Digite capacidade da sala">
+                    <input type="number" min="1" value="${sala.capacidade}" name="capacidade" required class="form-control" id="capacidade" placeholder="Digite capacidade da sala">
                 </div>
                 <div class="form-group">
                     <label for="tipo">Tipo de Sala</label>

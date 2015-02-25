@@ -19,6 +19,11 @@
     <body>
         <%@include  file="menu.html"%>
         <div class="container-page">
+            <c:forEach var="erros" items="${mensagensErros}">
+                <div class="notificacao">
+                    ${erros}
+                </div>
+            </c:forEach>
             <form action="buscar-evento" method="post" class="form-inline campos">
                 <div class="form-group">
                     <label for="nome">Nome: </label>
@@ -48,23 +53,23 @@
                         <input type="checkbox" name="status" id="realizado" value="Realizado">
                         <label for="realizado">Realizado</label>
                     </div>
-                <br>
-                <input type="submit" class="btn btn-success" value="Buscar">
-            </form>
-            <div class="tabela">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Nome</th>
-                            <th>Descrição</th>
-                            <th>Responsável</th>
-                            <th>Data Inicio</th>
-                            <th>Data Final</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                    <br>
+                    <input type="submit" class="btn btn-success" value="Buscar">
+                </form>
+                <div class="tabela">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nome</th>
+                                <th>Descrição</th>
+                                <th>Responsável</th>
+                                <th>Data Inicio</th>
+                                <th>Data Final</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         <c:forEach var="i" items="${eventosPesquisados}">
                             <c:if test="${i.status=='Pendente de Local'}">
                                 <tr class="warning">

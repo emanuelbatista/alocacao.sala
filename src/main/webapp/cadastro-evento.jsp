@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
     <head>
         <title>Cadastro de Evento</title>
@@ -30,6 +31,11 @@
     </head>
     <body>
         <jsp:include page="menu.html"/>
+         <c:forEach var="erros" items="${mensagensErros}">
+                <div class="notificacao">
+                    ${erros}
+                </div>
+            </c:forEach>
         <div class="formulario">
             <h3>Cadastro de Evento</h3>
             <form action="cadastro-evento" method="post">
@@ -55,11 +61,11 @@
                 </div>
                 <div class="form-group">
                     <label for="totalParticipantes">Total de Participantes</label>
-                    <input type="number" name="totalParticipantes" required class="form-control" id="totalParticipantes" placeholder="Digite o total de Partcipantes desse Evento">
+                    <input type="number" name="totalParticipantes" min="1" required class="form-control" id="totalParticipantes" placeholder="Digite o total de Partcipantes desse Evento">
                 </div>
                 <div class="form-group">
                     <label for="totalRepeticao">Repetições desse Evento</label>
-                    <input type="number" name="totalRepeticao" required class="form-control" id="totalRepeticao" placeholder="Digite o total de Repetições desse Evento">
+                    <input type="number" name="totalRepeticao" min="1" required class="form-control" id="totalRepeticao" placeholder="Digite o total de Repetições desse Evento">
                 </div>
                 <div class="form-group submit">
                     <input type="submit" name="submit" class="btn btn-success" value="Cadastrar">

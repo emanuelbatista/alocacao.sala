@@ -25,4 +25,6 @@ public interface SalaDaoIf {
 
     List<Sala> listar() throws PersistenciaException;  
     
+    boolean existeIdentificacao(String identificacao) throws PersistenciaException;
+    
 }

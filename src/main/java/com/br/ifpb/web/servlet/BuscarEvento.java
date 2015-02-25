@@ -4,10 +4,11 @@ import com.br.ifpb.business.object.GerenciarEvento;
 import com.br.ifpb.execoes.PersistenciaException;
 import com.br.ifpb.value.object.Evento;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "BuscarEvento", urlPatterns = {"/buscar-evento"})
 public class BuscarEvento extends HttpServlet {
-
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -51,40 +51,33 @@ public class BuscarEvento extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-
-        String nome = request.getParameter("nome");
-        String descricao = request.getParameter("descricao");
-        String responsavel = request.getParameter("responsavel");
-        Timestamp data = criarData(request.getParameter("data"));
-        String[] status = request.getParameterValues("status");
-        GerenciarEvento gerenciarEvento = new GerenciarEvento();
-        List<Evento> eventos = null;
+        List<String> mensagensErros = new LinkedList<>();
         try {
-            eventos = gerenciarEvento.buscarEvento(nome, descricao, data, responsavel, status);
+            String nome = request.getParameter("nome");
+            String descricao = request.getParameter("descricao");
+            String responsavel = request.getParameter("responsavel");
+            String[] status = request.getParameterValues("status");
+            Timestamp data = converteTimestamp(request.getParameter("data"));
+            GerenciarEvento gerenciarEvento = new GerenciarEvento();
+            List<Evento> eventos = gerenciarEvento.buscarEvento(nome, descricao, data, responsavel, status);
+            request.setAttribute("eventosPesquisados", eventos);
         } catch (PersistenciaException ex) {
             Logger.getLogger(BuscarEvento.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DateTimeParseException ex) {
+            mensagensErros.add("Data está no Formato Errado");
+            request.setAttribute("mensagensErros", mensagensErros);
         }
-        request.setAttribute("eventosPesquisados", eventos);
         getServletContext().getRequestDispatcher("/buscar-eventos.jsp").forward(request, response);
     }
 
-    private Timestamp criarData(String data) throws IllegalArgumentException {
+    private Timestamp converteTimestamp(String data) throws DateTimeParseException {
         if (data != null && !data.isEmpty()) {
             DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             LocalDateTime localDate = LocalDateTime.parse(data, format);
             return Timestamp.valueOf(localDate);
-        }else return null;
-
+        } else {
+            return null;
+        }
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }
