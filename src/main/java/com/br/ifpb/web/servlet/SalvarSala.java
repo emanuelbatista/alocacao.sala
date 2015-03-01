@@ -41,7 +41,7 @@ public class SalvarSala extends HttpServlet {
             GerenciarSala gerenciarSala = new GerenciarSala();
             Sala sala=gerenciarSala.getSala(id);
             if (!gerenciarSala.existeIdentificacao(identificacao) || sala.getIdentificacao().equals(identificacao)) {
-                gerenciarSala.editar(id, identificacao, apelido, tipo, capacidade);
+                gerenciarSala.atualizar(id, identificacao, apelido, tipo, capacidade);
                 response.sendRedirect("salas");
             }else{
                 String mensagemErro="Identificacao já Existe";

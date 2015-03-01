@@ -17,7 +17,7 @@ public interface SalaDaoIf {
 
     void adicionar(Sala sala) throws PersistenciaException;
 
-    void editar(Sala sala) throws PersistenciaException;
+    void atualizar(Sala sala) throws PersistenciaException;
 
     void remover(Integer id) throws PersistenciaException;
     

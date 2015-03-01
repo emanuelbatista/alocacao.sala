@@ -10,11 +10,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- *
+ * Classe que faz todos as ações responsável por um {@link Sala} fazendo a comunicação direta 
+ * com o banco de dados Postgre SQL  
  * @author Emanuel
  */
 public class SalaDao implements SalaDaoIf {
@@ -35,7 +34,7 @@ public class SalaDao implements SalaDaoIf {
     }
 
     @Override
-    public void editar(Sala sala) throws PersistenciaException {
+    public void atualizar(Sala sala) throws PersistenciaException {
         try (Connection con = ConexaoBanco.getConexao()) {
             String sql = "UPDATE Sala SET tipo=?, apelido=?, capacidade=?,identificacao=? WHERE id=?";
             PreparedStatement stat = con.prepareStatement(sql);

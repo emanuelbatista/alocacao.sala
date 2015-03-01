@@ -13,21 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ *Servlet responsável por fazer o controle do <b>Cancelamento de Eventos</b> 
  * @author Emanuel Batista da Silva Filho <emanuelbatista2011@gmail.com>
  */
 @WebServlet(name = "CancelarEvento", urlPatterns = {"/cancelar-evento"})
 public class CancelarEvento extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");

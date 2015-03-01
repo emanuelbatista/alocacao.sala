@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.br.ifpb.persiste.conexao.banco;
 
 import java.io.File;
@@ -15,7 +10,8 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 /**
- *
+ * Essa Classe é responsável pelo gerenciamento do arquivo de propriedade 
+ * que contém as informações sobre a conexão com o banco de dados
  * @author Emanuel
  */
 public class PropriedadeBanco {
@@ -33,11 +29,22 @@ public class PropriedadeBanco {
         }
         return instance;
     }
+    
+    /**
+     * Retorna o valor de acordo com a chave passado por parâmetro
+     * @param key
+     * @return {@link String}
+     */
     public String getString(String key) {
 	String value = this.prop.getProperty(key);
 	return value;
     }
     
+    /**
+     * Escreve a chave e o valor no arquivo de propriedade
+     * @param key
+     * @param value 
+     */
     public void putString(String key, String value) {
     	this.prop.setProperty(key, value);
     	updateProperties();

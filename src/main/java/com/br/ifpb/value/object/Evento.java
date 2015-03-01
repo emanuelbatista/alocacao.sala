@@ -3,7 +3,7 @@ package com.br.ifpb.value.object;
 import java.sql.Timestamp;
 
 /**
- *
+ * Classe que representa um <b>Evento</b> com seus respectivos atributos
  * @author Emanuel
  */
 public class Evento {

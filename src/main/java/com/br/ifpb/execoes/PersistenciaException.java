@@ -1,6 +1,9 @@
 package com.br.ifpb.execoes;
 
-
+/**
+ * Representa uma exeção executada por dados persistentes 
+ * @author Emanuel Batista da Silva Filho <emanuelbatista2011@gmail.com>
+ */
 @SuppressWarnings("serial")
 public class PersistenciaException extends Exception{
 

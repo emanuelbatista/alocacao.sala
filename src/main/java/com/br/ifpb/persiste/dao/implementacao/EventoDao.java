@@ -17,7 +17,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
+ * Classe que faz todos as ações responsável por {@link Evento} fazendo a comunicação direta 
+ * com o banco de dados Postgre SQL  
  * @author Emanuel Batista da Silva Filho <emanuelbatista2011@gmail.com>
  * @date 04/02/2015
  */
