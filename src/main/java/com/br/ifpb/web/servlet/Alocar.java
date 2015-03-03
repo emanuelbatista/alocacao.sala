@@ -32,7 +32,7 @@ public class Alocar extends HttpServlet {
         } catch (PersistenciaException ex) {
             Logger.getLogger(Alocar.class.getName()).log(Level.SEVERE, null, ex);
         }
-        request.getSession().removeAttribute("eventos");
+        request.getSession().removeAttribute("eventosTemporario");
         response.sendRedirect("eventos");
 
     }

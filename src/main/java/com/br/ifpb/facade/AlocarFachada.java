@@ -8,7 +8,7 @@ import com.br.ifpb.value.object.Sala;
 import java.util.List;
 
 /**
- * Classe que representa um fachada para Alocar um Evento
+ * Classe que representa uma fachada para Alocar um Evento em uma Sala
  * @author Emanuel Batista da Silva Filho <emanuelbatista2011@gmail.com>
  * @date 01/03/2015 às 19:59:01
  */

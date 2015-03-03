@@ -7,6 +7,7 @@ import com.br.ifpb.converter.ConverterInformacao;
 import com.br.ifpb.value.object.Evento;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,13 +56,14 @@ public class CadastroEvento extends HttpServlet {
         try {
             dataInicio = ConverterInformacao.converteTimestamp(request.getParameter("dataInicio"));
             dataFinal = ConverterInformacao.converteTimestamp(request.getParameter("dataFinal"));
-            if(dataInicio.compareTo(dataFinal)>0){
+            if(dataInicio.compareTo(dataFinal)>0 ||  
+                    Timestamp.valueOf(dataInicio.toLocalDateTime().plusWeeks(1)).compareTo(dataFinal)<0 ){
                throw new Exception();
             }
         } catch (DateTimeParseException ex) {
             mensagensErros.add("Data Final Formato Invalido");
         } catch (Exception ex) {
-            mensagensErros.add("Data inicial está maior que a Final");
+            mensagensErros.add("Data inicial está maior que a Final ou entre a Data Inicial e a Data Final é maior que uma semana");
         }
         if (mensagensErros.isEmpty()) {
             try {
