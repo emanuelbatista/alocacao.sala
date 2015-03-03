@@ -15,15 +15,16 @@ import java.util.List;
 public class AlocarFachada {
 
     /**
-     * Aloca os 
+     * Aloca os Eventos em um Sala, onde os Eventos são passados por parâmetro 
+     * e o ID da sala é passados também por parâmetro
      * @param eventos
-     * @param id
+     * @param idSala
      * @throws PersistenciaException 
      */
-    public void alocar(List<Evento> eventos, Integer id) throws PersistenciaException {
+    public void alocar(List<Evento> eventos, Integer idSala) throws PersistenciaException {
         if (eventos != null) {
             GerenciarSala gerenciarSala = new GerenciarSala();
-            Sala sala = gerenciarSala.getSala(id);
+            Sala sala = gerenciarSala.getSala(idSala);
             GerenciarEvento evento = new GerenciarEvento();
             if (eventos.get(0).getId() == null) {
                 for (int i = 0; i < eventos.size(); i++) {
@@ -32,7 +33,7 @@ public class AlocarFachada {
                 }
                 evento.adicionar(eventos.toArray(new Evento[0]));
             } else {
-                evento.alocar(id, eventos.toArray(new Evento[0]));
+                evento.alocar(idSala, eventos.toArray(new Evento[0]));
             }
         }
     }

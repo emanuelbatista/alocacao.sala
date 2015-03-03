@@ -18,7 +18,7 @@ public class ConexaoBanco {
      */
     public static  Connection getConexao() throws ClassNotFoundException, SQLException{
         PropriedadeBanco propriedadeBanco=PropriedadeBanco.getInstance();
-        Class.forName("org.postgresql.Driver");
+        Class.forName(propriedadeBanco.getString("drive"));
         String url=propriedadeBanco.getString("url");
         String user=propriedadeBanco.getString("user");
         String password=propriedadeBanco.getString("password");
