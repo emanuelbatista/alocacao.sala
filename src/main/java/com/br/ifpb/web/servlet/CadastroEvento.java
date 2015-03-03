@@ -7,7 +7,6 @@ import com.br.ifpb.converter.ConverterInformacao;
 import com.br.ifpb.value.object.Evento;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,19 +50,18 @@ public class CadastroEvento extends HttpServlet {
         Integer repiticoes = Integer.valueOf(request.getParameter("totalRepeticao"));
         Integer totalParticipantes = Integer.valueOf(request.getParameter("totalParticipantes"));
         String submit = request.getParameter("submit");
-        Timestamp dataInicio = null;
-        Timestamp dataFinal = null;
+        Timestamp dataInicio=null,dataFinal=null;
         try {
             dataInicio = ConverterInformacao.converteTimestamp(request.getParameter("dataInicio"));
             dataFinal = ConverterInformacao.converteTimestamp(request.getParameter("dataFinal"));
             if(dataInicio.compareTo(dataFinal)>0 ||  
-                    Timestamp.valueOf(dataInicio.toLocalDateTime().plusWeeks(1)).compareTo(dataFinal)<0 ){
-               throw new Exception();
+                    Timestamp.valueOf(dataInicio.toLocalDateTime().plusWeeks(1)).compareTo(dataFinal)<=0 ){
+               throw new Exception("Data inicial está maior que a Final ou entre a Data Inicial e a Data Final é maior que uma semana");
             }
         } catch (DateTimeParseException ex) {
-            mensagensErros.add("Data Final Formato Invalido");
+            mensagensErros.add(ex.getMessage());
         } catch (Exception ex) {
-            mensagensErros.add("Data inicial está maior que a Final ou entre a Data Inicial e a Data Final é maior que uma semana");
+            mensagensErros.add(ex.getMessage());
         }
         if (mensagensErros.isEmpty()) {
             try {
@@ -86,6 +84,4 @@ public class CadastroEvento extends HttpServlet {
            getServletContext().getRequestDispatcher("/cadastro-evento.jsp").forward(request, response);
         }
     }
-
-
 }
