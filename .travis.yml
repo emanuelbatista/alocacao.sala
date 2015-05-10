@@ -1,0 +1,6 @@
+language: java
+jdk:
+  - oraclejdk8
+before_install:
+  - bash ./libs/mvn-install-libs.sh
+install: mvn install -U -DskipTests=false
