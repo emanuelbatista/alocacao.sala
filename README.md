@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/emanuelbatista/alocacao.sala.svg)](https://travis-ci.org/emanuelbatista/alocacao.sala)
 # Intruções sobre o Ambiente 
   * Banco de Dados - PostgreSQL 9.3
   * Linguagem de Progamação - Java 8.0_25
