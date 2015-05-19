@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-	 version="3.1" metadata-complete="false">
+<web-app metadata-complete="false" version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <servlet-mapping>
+        <servlet-name>Alocar</servlet-name>
+        <url-pattern>/alocar</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BuscarEvento</servlet-name>
+        <url-pattern>/buscar-evento</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CadastroEvento</servlet-name>
+        <url-pattern>/cadastro-evento</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CadastroSala</servlet-name>
+        <url-pattern>/cadastro-sala</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
@@ -12,6 +24,22 @@
     <servlet>
         <servlet-name>Eventos</servlet-name>
         <servlet-class>com.br.ifpb.web.servlet.Eventos</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Alocar</servlet-name>
+        <servlet-class>com.br.ifpb.web.servlet.Alocar</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BuscarEvento</servlet-name>
+        <servlet-class>com.br.ifpb.web.servlet.BuscarEvento</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CadastroEvento</servlet-name>
+        <servlet-class>com.br.ifpb.web.servlet.CadastroEvento</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CadastroSala</servlet-name>
+        <servlet-class>com.br.ifpb.web.servlet.CadastroEvento</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Eventos</servlet-name>
