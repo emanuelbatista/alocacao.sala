@@ -39,7 +39,7 @@
     </servlet>
     <servlet>
         <servlet-name>CadastroSala</servlet-name>
-        <servlet-class>com.br.ifpb.web.servlet.CadastroEvento</servlet-class>
+        <servlet-class>com.br.ifpb.web.servlet.CadastroSala</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Eventos</servlet-name>
